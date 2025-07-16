@@ -17,13 +17,15 @@ if [ -e /app/config ]; then
   CURRENT_UID=$(stat -c %u /app/config)
   CURRENT_GID=$(stat -c %g /app/config)
 
-  if [ "$CURRENT_UID" -ne "$PUID" ] || [ "$CURRENT_GID" -ne "$PGID" ]; then
-    echo "Fixing ownership of /app/config"
-    if ! chown -R "$PUID:$PGID" /app/config 2>/dev/null; then
-      echo "Warning: Could not chown /app/config; continuing anyway"
+  if [ "$CURRENT_UID" -eq "$PUID" ] && [ "$CURRENT_GID" -eq "$PGID" ]; then
+    echo "/app/config already owned by correct UID/GID, skipping chown"
+    if ! [ -w /app/config ]; then
+      echo "Warning: /app/config is not writable by UID $PUID — this can happen with bind mounts"
+      echo "Hint: Run 'chmod -R u+rwX /path/to/config' on the host"
     fi
   else
-    echo "/app/config already owned by correct UID/GID, skipping chown"
+    echo "Fixing ownership of /app/config"
+    chown -R "$PUID:$PGID" /app/config 2>/dev/null || echo "Warning: Could not chown /app/config"
   fi
 else
   echo "/app/config does not exist; skipping ownership check"
