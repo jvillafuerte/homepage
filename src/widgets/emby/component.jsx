@@ -106,7 +106,7 @@ function SingleSessionEntry({ playCommand, session, enableUser, showEpisodeNumbe
             />
           )}
         </div>
-        <div className="grow " />
+        <div className="grow" />
         <div className="self-center text-xs flex justify-end mr-1 z-10">{IsMuted && <BsVolumeMuteFill />}</div>
         <div className="self-center text-xs flex justify-end mr-2 z-10">
           {ticksToString(PositionTicks)}
