@@ -42,10 +42,15 @@ async function retrieveFromGlancesAPI(privateWidgetOptions, endpoint) {
 }
 
 export default async function handler(req, res) {
-  const { index, cputemp: includeCpuTemp, uptime: includeUptime, disk: includeDisks, version } = req.query;
+  const { index, cputemp: includeCpuTemp, uptime: includeUptime, disk: includeDisks, version, url } = req.query;
 
-  const privateWidgetOptions = await getPrivateWidgetOptions("glances", index);
-  privateWidgetOptions.version = version ?? 3;
+  let privateWidgetOptions = {};
+  privateWidgetOptions = await getPrivateWidgetOptions("glances", index);
+  if (!privateWidgetOptions) {
+    privateWidgetOptions = { version: version || 4, url };
+  } else {
+    privateWidgetOptions.version = version ?? 4;
+  }
 
   try {
     const cpuData = await retrieveFromGlancesAPI(privateWidgetOptions, "cpu");

@@ -321,6 +321,7 @@ export function cleanServiceGroups(groups) {
 
           // glances, customapi, iframe, prometheusmetric
           refreshInterval,
+          url,
 
           // hdhomerun
           tuner,
@@ -562,6 +563,7 @@ export function cleanServiceGroups(groups) {
         }
         if (type === "glances") {
           if (metric) widget.metric = metric;
+          if (url) widget.url = url;
           if (chart !== undefined) {
             widget.chart = chart;
           } else {

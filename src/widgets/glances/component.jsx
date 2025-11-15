@@ -1,3 +1,4 @@
+import All from "./metrics/all";
 import Containers from "./metrics/containers";
 import Cpu from "./metrics/cpu";
 import Disk from "./metrics/disk";
@@ -11,6 +12,10 @@ import Sensor from "./metrics/sensor";
 
 export default function Component({ service }) {
   const { widget } = service;
+
+  if (widget.metric === "all") {
+    return <All service={service} />;
+  }
 
   if (widget.metric === "info") {
     return <Info service={service} />;

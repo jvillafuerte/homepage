@@ -1,8 +1,9 @@
 import Block from "components/services/widget/block";
 import Container from "components/services/widget/container";
 import { useTranslation } from "next-i18next";
-import { BsCpu, BsFillCpuFill, BsFillPlayFill, BsPauseFill, BsVolumeMuteFill } from "react-icons/bs";
-import { MdOutlineSmartDisplay } from "react-icons/md";
+import { BsFillPlayFill, BsPauseFill, BsVolumeMuteFill } from "react-icons/bs";
+import { HiCpuChip, HiOutlineCpuChip } from "react-icons/hi2";
+import { MdPlayCircle } from "react-icons/md";
 
 import { getURLSearchParams } from "utils/proxy/api-helpers";
 import useWidgetAPI from "utils/proxy/use-widget-api";
@@ -27,10 +28,9 @@ function ticksToString(ticks) {
   return parts.map((part) => part.toString().padStart(2, "0")).join(":");
 }
 
-function generateStreamTitle(session, enableUser, showEpisodeNumber) {
+function generateStreamTitle(session, showEpisodeNumber) {
   const {
     NowPlayingItem: { Name, SeriesName, Type, ParentIndexNumber, IndexNumber, AlbumArtist, Album },
-    UserName,
   } = session;
   let streamTitle = "";
 
@@ -44,12 +44,13 @@ function generateStreamTitle(session, enableUser, showEpisodeNumber) {
     streamTitle = `${Name}${SeriesName ? ` - ${SeriesName}` : ""}`;
   }
 
-  return enableUser ? `${streamTitle} (${UserName})` : streamTitle;
+  return streamTitle;
 }
 
 function SingleSessionEntry({ playCommand, session, enableUser, showEpisodeNumber, enableMediaControl }) {
   const {
     PlayState: { PositionTicks, IsPaused, IsMuted },
+    UserName
   } = session;
 
   const RunTimeTicks =
@@ -61,20 +62,21 @@ function SingleSessionEntry({ playCommand, session, enableUser, showEpisodeNumbe
 
   const percent = Math.min(1, PositionTicks / RunTimeTicks) * 100;
 
-  const streamTitle = generateStreamTitle(session, enableUser, showEpisodeNumber);
+  const streamTitle = generateStreamTitle(session, showEpisodeNumber);
   return (
     <>
       <div className="text-theme-700 dark:text-theme-200 relative h-5 w-full rounded-md bg-theme-200/50 dark:bg-theme-900/20 mt-1 flex">
         <div className="grow text-xs z-10 self-center ml-2 relative w-full h-4 mr-2">
           <div className="absolute w-full whitespace-nowrap text-ellipsis overflow-hidden" title={streamTitle}>
+            {enableUser ? <span className="font-bold border-r-theme-200/20 border-r pr-1 mr-1">{UserName}</span> : null}
             {streamTitle}
           </div>
         </div>
         <div className="self-center text-xs flex justify-end mr-1.5 pl-1">
-          {IsVideoDirect && <MdOutlineSmartDisplay className="opacity-50" />}
-          {!IsVideoDirect && (!VideoDecoderIsHardware || !VideoEncoderIsHardware) && <BsCpu className="opacity-50" />}
+          {IsVideoDirect && <MdPlayCircle className="opacity-50" />}
+          {!IsVideoDirect && (!VideoDecoderIsHardware || !VideoEncoderIsHardware) && <HiOutlineCpuChip className="opacity-50" />}
           {!IsVideoDirect && VideoDecoderIsHardware && VideoEncoderIsHardware && (
-            <BsFillCpuFill className="opacity-50" />
+            <HiCpuChip className="opacity-50" />
           )}
         </div>
       </div>
@@ -119,6 +121,7 @@ function SingleSessionEntry({ playCommand, session, enableUser, showEpisodeNumbe
 function SessionEntry({ playCommand, session, enableUser, showEpisodeNumber, enableMediaControl }) {
   const {
     PlayState: { PositionTicks, IsPaused, IsMuted },
+    UserName
   } = session;
 
   const RunTimeTicks =
@@ -128,7 +131,7 @@ function SessionEntry({ playCommand, session, enableUser, showEpisodeNumber, ena
     IsVideoDirect: true,
   }; // if no transcodinginfo its videodirect
 
-  const streamTitle = generateStreamTitle(session, enableUser, showEpisodeNumber);
+  const streamTitle = generateStreamTitle(session, showEpisodeNumber);
 
   const percent = Math.min(1, PositionTicks / RunTimeTicks) * 100;
 
@@ -160,15 +163,16 @@ function SessionEntry({ playCommand, session, enableUser, showEpisodeNumber, ena
       </div>
       <div className="grow text-xs z-10 self-center relative w-full h-4">
         <div className="absolute w-full whitespace-nowrap text-ellipsis overflow-hidden" title={streamTitle}>
+          {enableUser ? <span className="font-bold border-r-theme-200/20 border-r pr-1 mr-1">{UserName}</span> : null}
           {streamTitle}
         </div>
       </div>
       <div className="self-center text-xs flex justify-end mr-1 z-10">{IsMuted && <BsVolumeMuteFill />}</div>
       <div className="self-center text-xs flex justify-end mr-1 z-10">{ticksToString(PositionTicks)}</div>
       <div className="self-center items-center text-xs flex justify-end mr-1.5 pl-1 z-10">
-        {IsVideoDirect && <MdOutlineSmartDisplay className="opacity-50" />}
-        {!IsVideoDirect && (!VideoDecoderIsHardware || !VideoEncoderIsHardware) && <BsCpu className="opacity-50" />}
-        {!IsVideoDirect && VideoDecoderIsHardware && VideoEncoderIsHardware && <BsFillCpuFill className="opacity-50" />}
+        {IsVideoDirect && <MdPlayCircle className="opacity-50" />}
+        {!IsVideoDirect && (!VideoDecoderIsHardware || !VideoEncoderIsHardware) && <HiOutlineCpuChip className="opacity-50" />}
+        {!IsVideoDirect && VideoDecoderIsHardware && VideoEncoderIsHardware && <HiCpuChip className="opacity-50" />}
       </div>
     </div>
   );
