@@ -110,7 +110,7 @@ function SingleSessionEntry({ playCommand, session, enableUser, showEpisodeNumbe
         <div className="self-center text-xs flex justify-end mr-1 z-10">{IsMuted && <BsVolumeMuteFill />}</div>
         <div className="self-center text-xs flex justify-end mr-2 z-10">
           {ticksToString(PositionTicks)}
-          <span className="mx-0.5 text-[8px]">/</span>
+          <span className="mx-0.5">/</span>
           {ticksToString(RunTimeTicks)}
         </div>
       </div>
