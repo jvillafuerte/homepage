@@ -50,7 +50,7 @@ function generateStreamTitle(session, showEpisodeNumber) {
 function SingleSessionEntry({ playCommand, session, enableUser, showEpisodeNumber, enableMediaControl }) {
   const {
     PlayState: { PositionTicks, IsPaused, IsMuted },
-    UserName
+    UserName,
   } = session;
 
   const RunTimeTicks =
@@ -74,10 +74,10 @@ function SingleSessionEntry({ playCommand, session, enableUser, showEpisodeNumbe
         </div>
         <div className="self-center text-xs flex justify-end mr-1.5 pl-1">
           {IsVideoDirect && <MdPlayCircle className="opacity-50" />}
-          {!IsVideoDirect && (!VideoDecoderIsHardware || !VideoEncoderIsHardware) && <HiOutlineCpuChip className="opacity-50" />}
-          {!IsVideoDirect && VideoDecoderIsHardware && VideoEncoderIsHardware && (
-            <HiCpuChip className="opacity-50" />
+          {!IsVideoDirect && (!VideoDecoderIsHardware || !VideoEncoderIsHardware) && (
+            <HiOutlineCpuChip className="opacity-50" />
           )}
+          {!IsVideoDirect && VideoDecoderIsHardware && VideoEncoderIsHardware && <HiCpuChip className="opacity-50" />}
         </div>
       </div>
 
@@ -121,7 +121,7 @@ function SingleSessionEntry({ playCommand, session, enableUser, showEpisodeNumbe
 function SessionEntry({ playCommand, session, enableUser, showEpisodeNumber, enableMediaControl }) {
   const {
     PlayState: { PositionTicks, IsPaused, IsMuted },
-    UserName
+    UserName,
   } = session;
 
   const RunTimeTicks =
@@ -171,7 +171,9 @@ function SessionEntry({ playCommand, session, enableUser, showEpisodeNumber, ena
       <div className="self-center text-xs flex justify-end mr-1 z-10">{ticksToString(PositionTicks)}</div>
       <div className="self-center items-center text-xs flex justify-end mr-1.5 pl-1 z-10">
         {IsVideoDirect && <MdPlayCircle className="opacity-50" />}
-        {!IsVideoDirect && (!VideoDecoderIsHardware || !VideoEncoderIsHardware) && <HiOutlineCpuChip className="opacity-50" />}
+        {!IsVideoDirect && (!VideoDecoderIsHardware || !VideoEncoderIsHardware) && (
+          <HiOutlineCpuChip className="opacity-50" />
+        )}
         {!IsVideoDirect && VideoDecoderIsHardware && VideoEncoderIsHardware && <HiCpuChip className="opacity-50" />}
       </div>
     </div>

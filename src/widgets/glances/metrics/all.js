@@ -7,8 +7,8 @@ import useSWR from "swr";
 import { SettingsContext } from "utils/contexts/settings";
 
 import Resources from "../../../components/widgets/widget/resources";
-import Error from "../components/error";
 import ServiceResource from "../../../components/widgets/widget/service_resource";
+import Error from "../components/error";
 
 const cpuSensorLabels = ["cpu_thermal", "Core", "Tctl"];
 
@@ -18,24 +18,22 @@ function convertToFahrenheit(t) {
 
 export default function Widget({ service }) {
   const options = {
-    "index": 2,
-    "version": 4,
-    "cpu": true,
-    "mem": true,
-    "cputemp": true,
-    "uptime": true,
-    "disk": [
-        "/"
-    ],
-    "diskUnits": "bytes",
-    "expanded": true,
+    index: 2,
+    version: 4,
+    cpu: true,
+    mem: true,
+    cputemp: true,
+    uptime: true,
+    disk: ["/"],
+    diskUnits: "bytes",
+    expanded: true,
     // "label": "Computer B",
-    "style": {
-        "header": "underlined",
-        "isRightAligned": false
+    style: {
+      header: "underlined",
+      isRightAligned: false,
     },
-    url: service.widget.url
-  }
+    url: service.widget.url,
+  };
 
   const { t, i18n } = useTranslation();
   const { settings } = useContext(SettingsContext);
@@ -49,11 +47,11 @@ export default function Widget({ service }) {
   );
 
   if (error || data?.error) {
-      return <Error />;
-    }
+    return <Error />;
+  }
 
   if (!data) {
-    return null
+    return null;
   }
 
   const unit = options.units === "imperial" ? "fahrenheit" : "celsius";
@@ -90,7 +88,12 @@ export default function Widget({ service }) {
   const addedClasses = classNames("information-widget-glances ", { expanded: options.expanded });
 
   return (
-    <Resources options={options} target={settings.target ?? "_blank"} additionalClassNames={addedClasses} innerClassNames="relative flex flex-col md:flex-row w-full service-container @container/service-card">
+    <Resources
+      options={options}
+      target={settings.target ?? "_blank"}
+      additionalClassNames={addedClasses}
+      innerClassNames="relative flex flex-col md:flex-row w-full service-container @container/service-card"
+    >
       <div className="flex flex-row w-full @2xl/service-card:w-1/2">
         {options.cpu !== false && (
           <ServiceResource
